@@ -15,8 +15,8 @@ resource "aws_codebuild_project" "next_js_portfolio_codebuild_project" {
 
   environment {
     compute_type                = "BUILD_GENERAL1_SMALL"
-    image                       = "aws/codebuild/amazonlinux2-x86_64-standard:4.0"
-    type                        = "LINUX_CONTAINER"
+    image                       = "aws/codebuild/amazonlinux2-aarch64-standard:3.0"
+    type                        = "ARM_CONTAINER"
     image_pull_credentials_type = "CODEBUILD"
 
     environment_variable {
