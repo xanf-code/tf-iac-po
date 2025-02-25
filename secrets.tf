@@ -1,5 +1,5 @@
 resource "aws_secretsmanager_secret" "po_gateway_resource_id_secret" {
-  name = "${var.all_vars_prefix}-secrets-api-url-external-v1"
+  name                    = "${var.all_vars_prefix}-secrets-api-url-external-v1"
   recovery_window_in_days = 0
 }
 

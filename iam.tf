@@ -17,6 +17,25 @@ resource "aws_iam_role" "po_lambda_role" {
     EOF
 }
 
+resource "aws_iam_role" "po_ip_lambda_role" {
+  name               = "${var.all_vars_prefix}-ip-lambda"
+  assume_role_policy = <<EOF
+    {
+        "Version": "2012-10-17",
+        "Statement": [
+            {
+                "Action": "sts:AssumeRole",
+                "Principal": {
+                    "Service": "lambda.amazonaws.com"
+                },
+                "Effect": "Allow",
+                "Sid": ""
+            }
+        ]
+    }
+    EOF
+}
+
 resource "aws_iam_policy" "iam_logging_policy_for_po_lambda" {
 
   name        = "aws_iam_policy_for_po_api_lambda_role"
@@ -42,6 +61,11 @@ EOF
 
 resource "aws_iam_role_policy_attachment" "po_lambda_logs_attachment" {
   role       = aws_iam_role.po_lambda_role.name
+  policy_arn = aws_iam_policy.iam_logging_policy_for_po_lambda.arn
+}
+
+resource "aws_iam_role_policy_attachment" "po_ip_lambda_logs_attachment" {
+  role       = aws_iam_role.po_ip_lambda_role.name
   policy_arn = aws_iam_policy.iam_logging_policy_for_po_lambda.arn
 }
 
@@ -106,4 +130,46 @@ resource "aws_iam_role" "po_codepipeline_role" {
 resource "aws_iam_role_policy_attachment" "po_codepipeline_policy" {
   role       = aws_iam_role.po_codepipeline_role.name
   policy_arn = "arn:aws:iam::aws:policy/AWSCodePipeline_FullAccess"
+}
+
+resource "aws_iam_role_policy_attachment" "po_lambda_sqs_attachment" {
+  role       = aws_iam_role.po_ip_lambda_role.name
+  policy_arn = "arn:aws:iam::aws:policy/service-role/AWSLambdaSQSQueueExecutionRole"
+}
+
+resource "aws_iam_role_policy_attachment" "api_lambda_sqs_attachment" {
+  role       = aws_iam_role.po_ip_lambda_role.name
+  policy_arn = "arn:aws:iam::aws:policy/service-role/AWSLambdaSQSQueueExecutionRole"
+}
+
+resource "aws_iam_role_policy" "po_ip_lambda_sqs_send_policy" {
+  name = "${var.all_vars_prefix}-ip-lambda-sqs-all-policy"
+  role = aws_iam_role.po_ip_lambda_role.name
+
+  policy = jsonencode({
+    Version = "2012-10-17"
+    Statement = [
+      {
+        Action   = ["sqs:SendMessage", "sqs:ReceiveMessage", "sqs:DeleteMessage"]
+        Effect   = "Allow"
+        Resource = aws_sqs_queue.po_sqs_queue.arn
+      }
+    ]
+  })
+}
+
+resource "aws_iam_role_policy" "po_lambda_sqs_send_policy" {
+  name = "${var.all_vars_prefix}-api-lambda-sqs-send-policy"
+  role = aws_iam_role.po_lambda_role.name
+
+  policy = jsonencode({
+    Version = "2012-10-17"
+    Statement = [
+      {
+        Action   = ["sqs:SendMessage"]
+        Effect   = "Allow"
+        Resource = aws_sqs_queue.po_sqs_queue.arn
+      }
+    ]
+  })
 }

@@ -1,7 +1,7 @@
 resource "aws_lb" "po-load-balancer" {
   name               = "${var.all_vars_prefix}-po-load-balancer"
   internal           = false
-  load_balancer_type = "application"
+  load_balancer_type = "network"
   security_groups    = [aws_security_group.allow_traffic_load_balancer.id]
   subnets            = [aws_subnet.po_public_subnet_1.id, aws_subnet.po_public_subnet_2.id]
   tags = {
@@ -11,8 +11,8 @@ resource "aws_lb" "po-load-balancer" {
 
 resource "aws_lb_listener" "forward_to_target_group_http_listener" {
   load_balancer_arn = aws_lb.po-load-balancer.arn
-  port              = 80
-  protocol          = "HTTP"
+  port              = 6379
+  protocol          = "TCP"
 
   default_action {
     type             = "forward"
