@@ -18,6 +18,12 @@ resource "aws_autoscaling_group" "po-asg" {
   }
 
   target_group_arns = [aws_lb_target_group.po-lb-target-group.arn]
+
+  tag {
+    key = "Name"
+    value = "${var.all_vars_prefix}-auto-scaling-group-redis"
+    propagate_at_launch = true
+  }
 }
 
 resource "aws_autoscaling_schedule" "auto-shutdown-asg-schedule" {

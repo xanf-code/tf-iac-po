@@ -8,8 +8,8 @@ resource "aws_lb_target_group" "po-lb-target-group" {
   health_check {
     protocol            = "TCP"
     port                = 6379
-    interval            = 10
-    healthy_threshold   = 2
+    interval            = 30
+    healthy_threshold   = 3
     unhealthy_threshold = 3
   }
 }

@@ -2,7 +2,7 @@ resource "aws_lb" "po-load-balancer" {
   name               = "${var.all_vars_prefix}-po-load-balancer"
   internal           = false
   load_balancer_type = "network"
-  security_groups    = [aws_security_group.allow_traffic_load_balancer.id]
+  security_groups    = [aws_security_group.nlb_sg.id]
   subnets            = [aws_subnet.po_public_subnet_1.id, aws_subnet.po_public_subnet_2.id]
   tags = {
     Environment = "production"
