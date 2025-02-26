@@ -1,0 +1,14 @@
+{
+  "name": "ip_lambda",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "prebuild": "rm -rf dist",
+    "build": "tsup index.ts",
+    "postbuild": "cd dist && zip -r index.zip index.js",
+    "layer:build": "npm install && zip -r index.zip ."
+  },
+  "author": "",
+  "license": "ISC"
+}

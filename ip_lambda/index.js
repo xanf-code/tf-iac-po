@@ -1,7 +1,5 @@
 exports.handler = async (event) => {
   try {
-    console.log("Received event from SQS:", JSON.stringify(event, null, 2));
-
     if (!event.Records || event.Records.length === 0) {
       console.log("No messages received.");
       return {
@@ -10,15 +8,11 @@ exports.handler = async (event) => {
       };
     }
 
-    const messages = event.Records.map((record) => {
-      console.log("Processing message:", record.body);
-      return record.body;
+    event.Records.map((record) => {
+      const body = JSON.parse(record.body);
+      console.log("IP:", body.ip);
+      console.log("Time:", body.timestamp);
     });
-
-    return {
-      statusCode: 200,
-      body: JSON.stringify({ message: "Messages processed", data: messages }),
-    };
   } catch (error) {
     console.error("Error processing SQS message:", error);
     return {
