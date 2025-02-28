@@ -5,3 +5,4 @@ terraform.tfstate.backup
 prod.tfvars
 .git
 lambda
+ip_lambda

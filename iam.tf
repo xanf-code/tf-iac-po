@@ -158,6 +158,38 @@ resource "aws_iam_role_policy" "po_ip_lambda_sqs_send_policy" {
   })
 }
 
+resource "aws_iam_role_policy" "api_lambda_secrets_policy" {
+  name = "${var.all_vars_prefix}-api_lambda_secrets_policy"
+  role = aws_iam_role.po_lambda_role.name
+
+  policy = jsonencode({
+    Version = "2012-10-17"
+    Statement = [
+      {
+        Action   = ["secretsmanager:GetSecretValue"]
+        Effect   = "Allow"
+        Resource = aws_secretsmanager_secret.po_mongo_db_connection_string_id_secret.arn
+      }
+    ]
+  })
+}
+
+resource "aws_iam_role_policy" "po_ip_lambda_secrets_policy" {
+  name = "${var.all_vars_prefix}-ip_lambda_secrets_policy"
+  role = aws_iam_role.po_ip_lambda_role.name
+
+  policy = jsonencode({
+    Version = "2012-10-17"
+    Statement = [
+      {
+        Action   = ["secretsmanager:GetSecretValue"]
+        Effect   = "Allow"
+        Resource = aws_secretsmanager_secret.po_mongo_db_connection_string_id_secret.arn
+      }
+    ]
+  })
+}
+
 resource "aws_iam_role_policy" "po_lambda_sqs_send_policy" {
   name = "${var.all_vars_prefix}-api-lambda-sqs-send-policy"
   role = aws_iam_role.po_lambda_role.name

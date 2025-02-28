@@ -10,5 +10,9 @@
     "layer:build": "npm install && zip -r index.zip ."
   },
   "author": "",
-  "license": "ISC"
+  "license": "ISC",
+  "dependencies": {
+    "aws-sdk": "^2.1692.0",
+    "mongodb": "^6.13.1"
+  }
 }

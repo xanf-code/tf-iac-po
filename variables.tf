@@ -59,3 +59,7 @@ variable "docker_username" {
 variable "docker_password" {
   type = string
 }
+
+variable "mongo_secret" {
+  type = string
+}

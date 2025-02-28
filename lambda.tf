@@ -9,6 +9,7 @@ resource "aws_lambda_function" "po_api_lambda" {
   environment {
     variables = {
       SQS_QUEUE_URL = aws_sqs_queue.po_sqs_queue.url
+      MONGO_DB_URL_SECRET_NAME = aws_secretsmanager_secret.po_mongo_db_connection_string_id_secret.name
     }
   }
 
@@ -35,6 +36,13 @@ resource "aws_lambda_function" "po_ip_lambda" {
     aws_iam_role_policy_attachment.po_lambda_logs_attachment,
     aws_cloudwatch_log_group.po_ip_log_group,
   ]
+  
+  environment {
+    variables = {
+      MONGO_DB_URL_SECRET_NAME = aws_secretsmanager_secret.po_mongo_db_connection_string_id_secret.name
+    }
+  }
+  
 }
 
 resource "aws_cloudwatch_log_group" "po_ip_log_group" {

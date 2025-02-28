@@ -14,3 +14,13 @@ resource "aws_secretsmanager_secret_version" "po_gateway_resource_id_secret_vers
     )
   })
 }
+
+resource "aws_secretsmanager_secret" "po_mongo_db_connection_string_id_secret" {
+  name                    = "${var.all_vars_prefix}-secrets-api-mongo_connection_id"
+  recovery_window_in_days = 0
+}
+
+resource "aws_secretsmanager_secret_version" "po_mongo_db_connection_string_id_secret_version" {
+  secret_id = aws_secretsmanager_secret.po_mongo_db_connection_string_id_secret.id
+  secret_string = var.mongo_secret
+}
